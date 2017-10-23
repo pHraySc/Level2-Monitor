@@ -50,20 +50,31 @@ public class AlarmController {
     }
 
     @ResponseBody
-    @GetMapping("/querySourceTabNum")
-    public List<Map<String,Object>> querySourceTabName(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/querySourceTabNameAndNum")
+    public List<Map<String, Object>> querySourceTabNameAndNum(HttpServletRequest request, HttpServletResponse response) {
         String sourceTabName = ""; //模糊搜索源表名
+        String tmp_dataCycle; //周期解析
+        int dataCyle = 0; //源表周期
         String status = ""; //状态
         if (null != request.getParameter("sourceTabName")) {
             sourceTabName = request.getParameter("sourceTabName").trim();
+        }
+        if (null != request.getParameter("dataCyle")) {
+            tmp_dataCycle = request.getParameter("dataCyle").trim();
+            if(tmp_dataCycle.substring(1) == "1"){
+                dataCyle = 1;
+            }else {
+                dataCyle = 2;
+            }
         }
         if (null != request.getParameter("status")) {
             status = request.getParameter("status").trim();
         }
         Map<String, Object> sourceTMap = new HashMap<String, Object>();
-        sourceTMap.put("sourceTabName",sourceTabName);
-        sourceTMap.put("status",status);
-        List sourceTabList = alarmService.querySourceTabName(sourceTMap);
+        sourceTMap.put("sourceTabName", sourceTabName);
+        sourceTMap.put("dataCyle", dataCyle);
+        sourceTMap.put("status", status);
+        List sourceTabList = alarmService.querySourceTabNameList(sourceTMap);
         return sourceTabList;
     }
 }
