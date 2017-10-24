@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import utils.DateFormatUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,20 +51,23 @@ public class AlarmController {
     }
 
     @ResponseBody
-    @GetMapping("/querySourceTabNameAndNum")
-    public List<Map<String, Object>> querySourceTabNameAndNum(HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/querySourceTabInfo")
+    public List<Map<String, Object>> querySourceTabInfo(HttpServletRequest request, HttpServletResponse response) {
         String sourceTabName = ""; //模糊搜索源表名
         String tmp_dataCycle; //周期解析
         int dataCyle = 0; //源表周期
         String status = ""; //状态
+        Date d = new Date();
+        String opTime_d = DateFormatUtils.dateToStr_YYYYMMDD(d);
+        String opTime_m = DateFormatUtils.dateToStr_YYYYMM(d);
         if (null != request.getParameter("sourceTabName")) {
             sourceTabName = request.getParameter("sourceTabName").trim();
         }
         if (null != request.getParameter("dataCyle")) {
             tmp_dataCycle = request.getParameter("dataCyle").trim();
-            if(tmp_dataCycle.substring(1) == "1"){
+            if (tmp_dataCycle.substring(1) == "1") {
                 dataCyle = 1;
-            }else {
+            } else {
                 dataCyle = 2;
             }
         }
@@ -74,7 +78,75 @@ public class AlarmController {
         sourceTMap.put("sourceTabName", sourceTabName);
         sourceTMap.put("dataCyle", dataCyle);
         sourceTMap.put("status", status);
-        List sourceTabList = alarmService.querySourceTabNameList(sourceTMap);
+        List sourceTabList = alarmService.querySourceTabNameByDataCyle(sourceTMap);
         return sourceTabList;
+    }
+
+    @ResponseBody
+    @GetMapping("/querySourceTabNum")
+    public Map<String, Object> querySourceTabNum(HttpServletRequest request, HttpServletResponse response) {
+        String sourceTabName = ""; //模糊搜索源表名
+        String tmp_dataCycle; //周期解析
+        int dataCyle = 0; //源表周期
+        String status = ""; //状态
+        if (null != request.getParameter("sourceTabName")) {
+            sourceTabName = request.getParameter("sourceTabName").trim();
+        }
+        if (null != request.getParameter("dataCyle")) {
+            tmp_dataCycle = request.getParameter("dataCyle").trim();
+            if (tmp_dataCycle.substring(1) == "1") {
+                dataCyle = 1;
+            } else {
+                dataCyle = 2;
+            }
+        }
+        if (null != request.getParameter("status")) {
+            status = request.getParameter("status").trim();
+        }
+        Map<String, Object> sourceTMap = new HashMap<String, Object>();
+        sourceTMap.put("sourceTabName", sourceTabName);
+        sourceTMap.put("dataCyle", dataCyle);
+        sourceTMap.put("status", status);
+        int count = alarmService.querySourceTabNum(sourceTMap);
+        HashMap result = new HashMap();
+        result.put("count", count);
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping("/queryLabelNum")
+    public Map<String,Object> queryLabelNum(HttpServletRequest request, HttpServletResponse response) {
+        String labelName = ""; //模糊搜索源表名
+        String tmp_dataCycle; //周期解析
+        int dataCyle = 0; //源表周期
+        String status = ""; //状态
+        if (null != request.getParameter("labelName")) {
+            labelName = request.getParameter("labelName").trim();
+        }
+        if (null != request.getParameter("dataCyle")) {
+            tmp_dataCycle = request.getParameter("dataCyle").trim();
+            if (tmp_dataCycle.substring(1) == "1") {
+                dataCyle = 1;
+            } else {
+                dataCyle = 2;
+            }
+        }
+        if (null != request.getParameter("status")) {
+            status = request.getParameter("status").trim();
+        }
+        Map<String, Object> labelMap = new HashMap<String, Object>();
+        labelMap.put("labelName", labelName);
+        labelMap.put("dataCyle", dataCyle);
+        labelMap.put("status", status);
+        int count = alarmService.queryLabelNum(labelMap);
+        HashMap result = new HashMap<String,Object>();
+        result.put("count",count);
+        return result;
+    }
+
+    @ResponseBody
+    @GetMapping("/queryLabelInfo")
+    public void queryLabelInfo (HttpServletRequest request,HttpServletResponse response){
+
     }
 }
