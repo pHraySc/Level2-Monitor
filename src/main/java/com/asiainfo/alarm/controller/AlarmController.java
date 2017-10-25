@@ -60,6 +60,12 @@ public class AlarmController {
         Date d = new Date();
         String opTime_d = DateFormatUtils.dateToStr_YYYYMMDD(d);
         String opTime_m = DateFormatUtils.dateToStr_YYYYMM(d);
+        int currentPage = 0;
+        int pageSize = 8;
+        if (null != request.getParameter("page")) {
+            currentPage = Integer.valueOf(request.getParameter("page")).intValue();
+        }
+        int startIndex = (currentPage - 1) * pageSize; //页码，每页的起始索引
         if (null != request.getParameter("sourceTabName")) {
             sourceTabName = request.getParameter("sourceTabName").trim();
         }
@@ -78,6 +84,8 @@ public class AlarmController {
         sourceTMap.put("sourceTabName", sourceTabName);
         sourceTMap.put("dataCyle", dataCyle);
         sourceTMap.put("status", status);
+        sourceTMap.put("pageSize", pageSize);
+        sourceTMap.put("startIndex", startIndex);
         List sourceTabList = alarmService.querySourceTabNameByDataCyle(sourceTMap);
         return sourceTabList;
     }
@@ -115,7 +123,7 @@ public class AlarmController {
 
     @ResponseBody
     @GetMapping("/queryLabelNum")
-    public Map<String,Object> queryLabelNum(HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, Object> queryLabelNum(HttpServletRequest request, HttpServletResponse response) {
         String labelName = ""; //模糊搜索源表名
         String tmp_dataCycle; //周期解析
         int dataCyle = 0; //源表周期
@@ -139,14 +147,46 @@ public class AlarmController {
         labelMap.put("dataCyle", dataCyle);
         labelMap.put("status", status);
         int count = alarmService.queryLabelNum(labelMap);
-        HashMap result = new HashMap<String,Object>();
-        result.put("count",count);
+        HashMap result = new HashMap<String, Object>();
+        result.put("count", count);
         return result;
     }
 
     @ResponseBody
     @GetMapping("/queryLabelInfo")
-    public void queryLabelInfo (HttpServletRequest request,HttpServletResponse response){
-
+    public void queryLabelInfo(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html;charset=utf-8");
+        String labelName = ""; //模糊搜索源表名
+        String tmp_dataCycle; //周期解析
+        int dataCyle = 0; //源表周期
+        String status = ""; //状态
+        int currentPage = 0;
+        int pageSize = 8;
+        if (null != request.getParameter("page")) {
+            currentPage = Integer.valueOf(request.getParameter("page"));
+        }
+        int startIndex = (currentPage - 1) * pageSize;
+        if (null != request.getParameter("labelName")) {
+            labelName = request.getParameter("labelName").trim();
+        }
+        if (null != request.getParameter("dataCyle")) {
+            tmp_dataCycle = request.getParameter("dataCyle").trim();
+            if (tmp_dataCycle.substring(1) == "1") {
+                dataCyle = 1;
+            } else {
+                dataCyle = 2;
+            }
+        }
+        if (null != request.getParameter("status")) {
+            status = request.getParameter("status").trim();
+        }
+        Map<String, Object> labelMap = new HashMap<String, Object>();
+        labelMap.put("labelName", labelName);
+        labelMap.put("dataCyle", dataCyle);
+        labelMap.put("status", status);
+        labelMap.put("pageSize", pageSize);
+        labelMap.put("startIndex", startIndex);
+        List labelList = alarmService.queryLabelInfo(labelMap);
     }
 }

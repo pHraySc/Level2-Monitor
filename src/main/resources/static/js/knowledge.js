@@ -419,7 +419,7 @@ $(document).ready(function(){
 		
 	//新增绑定附件	
 	var addbindInfo = function(){
-			var faultId = $(".foundaodadd #faultId").val();
+			var faultId = $(".foundaodadd #fauldtI").val();
 			var attIdString = attIds.join(",");
 			$.ajax({
 				type:"GET",

@@ -5,5 +5,11 @@ import java.util.Map;
 
 public interface IAlarmService {
 
-    List querySourceTabName(Map<String, Object> sourceTMap);
+    List querySourceTabNameByDataCyle(Map<String, Object> sourceTMap);
+
+    int querySourceTabNum(Map<String, Object> sourceTMap);
+
+    int queryLabelNum(Map<String, Object> labelMap);
+
+    List queryLabelInfo(Map<String, Object> labelMap);
 }

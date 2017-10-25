@@ -15,8 +15,22 @@ public class AlarmServiceImpl implements IAlarmService {
 
 
     @Override
-    public List querySourceTabName(Map<String, Object> sourceTMap) {
-        List sourceTabList = alarmDao.querySourceTabName(sourceTMap);
-        return sourceTabList;
+    public List querySourceTabNameByDataCyle(Map<String, Object> sourceTMap) {
+        return alarmDao.querySourceTabNameByDataCyle(sourceTMap);
+    }
+
+    @Override
+    public int querySourceTabNum(Map<String, Object> sourceTMap) {
+        return alarmDao.querySourceTabNum(sourceTMap);
+    }
+
+    @Override
+    public int queryLabelNum(Map<String, Object> labelMap) {
+        return alarmDao.queryLabelNum(labelMap);
+    }
+
+    @Override
+    public List queryLabelInfo(Map<String, Object> labelMap) {
+        return alarmDao.queryLabelInfo(labelMap);
     }
 }
